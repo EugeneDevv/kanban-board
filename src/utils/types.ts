@@ -10,3 +10,8 @@ export type Task = {
   columnId: Id;
   content: string;
 }
+
+export interface Data {
+  columns: Column[];
+  tasks: Task[];
+}

@@ -1,0 +1,82 @@
+{
+  "columns": [
+    {
+      "id": "col1",
+      "title": "To Do"
+    },
+    {
+      "id": "col2",
+      "title": "In Progress"
+    },
+    {
+      "id": "col3",
+      "title": "Review"
+    },
+    {
+      "id": "col4",
+      "title": "Done"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "1",
+      "columnId": "col1",
+      "content": "Set up project repository"
+    },
+    {
+      "id": "2",
+      "columnId": "col1",
+      "content": "Define initial requirements"
+    },
+    {
+      "id": "3",
+      "columnId": "col1",
+      "content": "Create wireframes"
+    },
+    {
+      "id": "4",
+      "columnId": "col2",
+      "content": "Implement authentication"
+    },
+    {
+      "id": "5",
+      "columnId": "col2",
+      "content": "Set up database schema"
+    },
+    {
+      "id": "6",
+      "columnId": "col2",
+      "content": "Develop API endpoints"
+    },
+    {
+      "id": "7",
+      "columnId": "col3",
+      "content": "Code review for authentication"
+    },
+    {
+      "id": "8",
+      "columnId": "col3",
+      "content": "Test database schema"
+    },
+    {
+      "id": "9",
+      "columnId": "col3",
+      "content": "QA for API endpoints"
+    },
+    {
+      "id": "10",
+      "columnId": "col4",
+      "content": "Deploy initial build"
+    },
+    {
+      "id": "11",
+      "columnId": "col4",
+      "content": "Complete project documentation"
+    },
+    {
+      "id": "12",
+      "columnId": "col4",
+      "content": "Client feedback review"
+    }
+  ]
+}
