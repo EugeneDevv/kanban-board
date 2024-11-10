@@ -48,3 +48,34 @@ export const DELETE_TASKS = gql`
     }
   }
 `;
+
+export const ADD_TASK = gql`
+  mutation AddTask($columnId: String, $content: String) {
+    addTask(columnId: $columnId, content: $content) {
+      message
+      statusCode
+      task {
+        id
+        content
+        columnId
+      }
+    }
+  }
+`;
+
+export const UPDATE_TASK = gql`
+  mutation UpdateTask($id: ID!, $content: String) {
+    updateTask(id: $id, content: $content) {
+      message
+      statusCode
+    }
+  }
+`;
+export const MOVE_TASK = gql`
+  mutation MoveTask($activeTaskId: ID!, $overTaskId: ID!, $columnId: String) {
+    moveTask(activeTaskId: $activeTaskId, overTaskId: $overTaskId, columnId: $columnId) {
+      message
+      statusCode
+    }
+  }
+`;

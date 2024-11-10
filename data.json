@@ -1,52 +1,37 @@
 {
   "columns": [
     {
-      "id": "col1",
-      "title": "To-Do"
-    },
-    {
       "id": "col2",
       "title": "In Progress"
     },
     {
-      "id": "13e3f848-de3e-4ff2-adc8-0fefbbceb540",
-      "title": "New Column 2"
+      "id": "col1",
+      "title": "To-Do"
     },
     {
-      "id": "5e27578f-db84-409e-8205-0b75ffdda1f7",
-      "title": "New Col 3"
+      "id": "5a477a57-93fc-4d2c-85d0-576a9c1ed6d5",
+      "title": "new col"
+    },
+    {
+      "id": "3f99113e-987a-4de2-8a86-04a0deb126f3",
+      "title": "new col"
     }
   ],
   "tasks": [
+    {
+      "id": "3",
+      "columnId": "col2",
+      "content": "Create wireframes"
+    },
     {
       "id": "1",
       "columnId": "col1",
       "content": "Set up project repository"
     },
     {
-      "id": "2",
-      "columnId": "col1",
-      "content": "Define initial requirements"
-    },
-    {
-      "id": "3",
-      "columnId": "col1",
-      "content": "Create wireframes"
-    },
-    {
       "id": "4",
-      "columnId": "col2",
+      "columnId": "col1",
       "content": "Implement authentication"
-    },
-    {
-      "id": "5",
-      "columnId": "col2",
-      "content": "Set up database schema"
-    },
-    {
-      "id": "6",
-      "columnId": "col2",
-      "content": "Develop API endpoints"
     }
   ]
 }

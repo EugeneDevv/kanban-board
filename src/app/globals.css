@@ -53,12 +53,16 @@ a {
 .task-content {
   margin-top: auto;
   margin-bottom: auto;
-  width: 100%;
+  width: 100%;            /* Controls the width of the container */
   height: 90%;
   overflow-y: auto;
   overflow-x: hidden;
-  white-space: pre;
-  word-wrap: break-word;
+  white-space: normal;    /* Ensures the text can wrap onto the next line */
+  word-wrap: break-word;  /* Allows breaking long words */
+  text-overflow: ellipsis; 
+  display: -webkit-box;
+  -webkit-line-clamp: 2; 
+  -webkit-box-orient: vertical;
 }
 
 .task > ::-webkit-scrollbar-thumb {

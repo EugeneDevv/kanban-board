@@ -4,7 +4,17 @@ import { Column, Task, Data } from '@/utils/types';
 import { v4 as uuidv4 } from 'uuid';
 
 const dataPath = path.join(process.cwd(), 'data.json');
-const data: Data = JSON.parse(fs.readFileSync(dataPath, 'utf8'));
+
+// Function to read data from file
+const readData = (): Data => JSON.parse(fs.readFileSync(dataPath, 'utf8'));
+
+// Function to write data to file
+const writeData = (data: Data) => {
+  fs.writeFileSync(dataPath, JSON.stringify(data, null, 2));
+};
+
+// Load initial data
+let data: Data = readData();
 
 export const resolvers = {
   Query: {
@@ -29,7 +39,7 @@ export const resolvers = {
         title,
       };
       data.columns.push(newColumn);
-      fs.writeFileSync(dataPath, JSON.stringify(data, null, 2));
+      writeData(data);
 
       return {
         statusCode: 201,
@@ -43,21 +53,19 @@ export const resolvers = {
     ): Promise<{
       statusCode: number;
       message: string;
-      column: Column | null;
     }> => {
       const columnIndex = data.columns.findIndex((col) => col.id === id);
       if (columnIndex === -1)
-        return { statusCode: 404, message: 'Column not found', column: null };
+        return { statusCode: 404, message: 'Column not found' };
 
       const column = data.columns[columnIndex];
       column.title = title || column.title;
       data.columns[columnIndex] = column;
-      fs.writeFileSync(dataPath, JSON.stringify(data, null, 2));
+      writeData(data);
 
       return {
         statusCode: 200,
         message: 'Column updated successfully',
-        column,
       };
     },
     swapColumns: async (
@@ -70,42 +78,30 @@ export const resolvers = {
       statusCode: number;
       message: string;
     }> => {
-      // Find the indices of the active and over columns
-      console.log('columns', data.columns);
-      console.log('activeColumnId', activeColumnId);
-      console.log('overColumnId', overColumnId);
-      
-        const activeColumnIndex = data.columns.findIndex(
-          (col) => col.id.toString() === activeColumnId
-        );
-      
-      console.log('activeColumnIndex'), activeColumnIndex;
-      
-        const overColumnIndex = data.columns.findIndex(
-          (col) => col.id.toString() === overColumnId
-        );
-      
-      console.log('overColumnIndex', overColumnIndex);
-      
+      const activeColumnIndex = data.columns.findIndex(
+        (col) => col.id.toString() === activeColumnId
+      );
 
-        if (activeColumnIndex === -1 || overColumnIndex === -1)
-          return { statusCode: 404, message: 'Column not found' };
+      const overColumnIndex = data.columns.findIndex(
+        (col) => col.id.toString() === overColumnId
+      );
 
-        // Swap columns using splice
-        const activeColumn = data.columns[activeColumnIndex];
-        const overColumn = data.columns[overColumnIndex];
+      if (activeColumnIndex === -1 || overColumnIndex === -1)
+        return { statusCode: 404, message: 'Column not found' };
 
-        // Remove the columns and insert them at the new positions
-        data.columns.splice(activeColumnIndex, 1, overColumn);
-        data.columns.splice(overColumnIndex, 1, activeColumn);
+      const activeColumn = data.columns[activeColumnIndex];
+      const overColumn = data.columns[overColumnIndex];
 
-        // Optionally, save the updated columns back to the file
-        fs.writeFileSync(dataPath, JSON.stringify(data, null, 2));
+      // Remove the columns and insert them at the new positions
+      data.columns.splice(activeColumnIndex, 1, overColumn);
+      data.columns.splice(overColumnIndex, 1, activeColumn);
 
-        return {
-          statusCode: 200,
-          message: 'Column moved successfully',
-        };
+      writeData(data);
+
+      return {
+        statusCode: 200,
+        message: 'Column moved successfully',
+      };
     },
     deleteColumn: async (
       _: unknown,
@@ -115,20 +111,17 @@ export const resolvers = {
       message: string;
       column: Column | null;
     }> => {
-      // Find the column by ID
       const columnIndex = data.columns.findIndex((col) => col.id === id);
       if (columnIndex === -1) {
         return { statusCode: 404, message: 'Column not found', column: null };
       }
 
-      // Remove the column
       const [deletedColumn] = data.columns.splice(columnIndex, 1);
 
       // Remove tasks associated with the deleted column ID
       data.tasks = data.tasks.filter((task) => task.columnId !== id);
 
-      // Write the updated data to the file
-      fs.writeFileSync(dataPath, JSON.stringify(data, null, 2));
+      writeData(data);
 
       return {
         statusCode: 200,
@@ -150,7 +143,7 @@ export const resolvers = {
         content,
       };
       data.tasks.push(newTask);
-      fs.writeFileSync(dataPath, JSON.stringify(data, null, 2));
+      writeData(data);
 
       return {
         statusCode: 201,
@@ -160,27 +153,59 @@ export const resolvers = {
     },
     updateTask: async (
       _: unknown,
-      {
-        id,
-        columnId,
-        content,
-      }: { id: string; columnId: string; content: string }
+      { id, content }: { id: string; content: string }
     ): Promise<{ statusCode: number; message: string; task: Task | null }> => {
-      const columnIndex = data.columns.findIndex((col) => col.id === columnId);
-      if (columnIndex === -1)
-        return { statusCode: 404, message: 'Column not found', task: null };
-
       const taskIndex = data.tasks.findIndex((task) => task.id === id);
       if (taskIndex === -1)
         return { statusCode: 404, message: 'Task not found', task: null };
 
       const task = data.tasks[taskIndex];
-      task.columnId = columnId || task.columnId;
       task.content = content || task.content;
       data.tasks[taskIndex] = task;
-      fs.writeFileSync(dataPath, JSON.stringify(data, null, 2));
+      writeData(data);
 
       return { statusCode: 200, message: 'Task updated successfully', task };
+    },
+    moveTask: async (
+      _: unknown,
+      {
+        activeTaskId,
+        overTaskId,
+        columnId,
+      }: { activeTaskId: string; overTaskId: string; columnId: string }
+    ): Promise<{
+      statusCode: number;
+      message: string;
+    }> => {
+      const activeTaskIndex = data.tasks.findIndex(
+        (col) => col.id.toString() === activeTaskId
+      );
+
+      const overTaskIndex = data.tasks.findIndex(
+        (col) => col.id.toString() === overTaskId
+      );
+
+      if (activeTaskIndex === -1 || overTaskIndex === -1)
+        return { statusCode: 404, message: 'Task not found' };
+
+      // Swap tasks using splice
+      const activeTask = data.tasks[activeTaskIndex];
+      const overTask = data.tasks[overTaskIndex];
+
+      if (columnId.length > 0) {
+        activeTask.columnId = columnId;
+      }
+
+      // Remove the tasks and insert them at the new positions
+      data.tasks.splice(activeTaskIndex, 1, overTask);
+      data.tasks.splice(overTaskIndex, 1, activeTask);
+
+      writeData(data);
+
+      return {
+        statusCode: 200,
+        message: 'Task moved successfully',
+      };
     },
     deleteTasks: async (
       _: unknown,
@@ -200,8 +225,7 @@ export const resolvers = {
         }
       });
 
-      // Write the updated tasks to the data file
-      fs.writeFileSync(dataPath, JSON.stringify(data, null, 2));
+      writeData(data);
 
       return {
         statusCode: deletedTasks.length > 0 ? 200 : 404,

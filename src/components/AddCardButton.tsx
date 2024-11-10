@@ -7,49 +7,46 @@ import { useState } from 'react';
 import Box from '@mui/material/Box';
 import { toast } from 'react-toastify';
 import { useMutation } from '@apollo/client';
-import { ADD_COLUMN } from '@/app/api/graphql/mutations';
+import { ADD_TASK } from '@/app/api/graphql/mutations';
 import { GET_COLUMNS_AND_TASKS } from '@/app/api/graphql/queries';
 
-interface AppProps{
-  columnCount : number
+interface AppProps {
+  columnId: string;
 }
 
-const AddColumnCard: NextPage<AppProps> = ({ columnCount }) => {
+const AddCardButton: NextPage<AppProps> = ({ columnId }) => {
   const [editMode, setEditMode] = useState(false);
-  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
 
-  /** Mutation to add a new column and refetch columns and tasks on success */
-  const [addColumn] = useMutation(ADD_COLUMN, {
+  /** Mutation to add a new task and refetch columns and tasks on success */
+  const [addTask] = useMutation(ADD_TASK, {
     refetchQueries: [{ query: GET_COLUMNS_AND_TASKS }]
   });
 
-  /** Toggles the edit mode for adding a new column */
+  /** Toggles the edit mode for adding a new task */
   const toggleEditMode = () => {
     setEditMode(prev => !prev);
   };
 
-  /** Submits a new column title, shows feedback, and resets the form */
+  /** Submits a new task content, shows feedback, and resets the form */
   const handleSubmit = async () => {
     try {
-      if (title.trim().length < 1) {
-        toast.warning("Enter a valid column name");
+      if (content.trim().length < 1) {
+        toast.warning("Enter a valid task name");
         return;
       }
-      const response = await addColumn({ variables: { title } });
-      const { statusCode, message } = response.data.addColumn;
+      const response = await addTask({ variables: { columnId, content } });
+      const { statusCode, message } = response.data.addTask;
 
       if (statusCode === 201) {
-        if (columnCount > 3) {
-          toast.info("You can only create 5 columns");
-        }
         toast.success(message);
-        setTitle("");
+        setContent("");
         toggleEditMode();
       } else {
         toast.warning(message);
       }
     } catch (error) {
-      toast.error("An error occurred while adding column.");
+      toast.error("An error occurred while adding card.");
     }
   };
 
@@ -59,7 +56,7 @@ const AddColumnCard: NextPage<AppProps> = ({ columnCount }) => {
       sx={{
         paddingY: "4px",
         paddingX: "8px",
-        width: "280px",
+        width: 350,
         minHeight: "54px",
         maxHeight: "120px",
         color: "primary.main",
@@ -74,11 +71,11 @@ const AddColumnCard: NextPage<AppProps> = ({ columnCount }) => {
     >
       <TextField
         id="outlined-basic"
-        label="Name"
+        label="Title"
         autoFocus
         variant="outlined"
         fullWidth
-        onChange={(e) => setTitle(e.target.value)}
+        onChange={(e) => setContent(e.target.value)}
       />
       <Box sx={{ display: "flex", justifyContent: "space-between", width: "100%" }}>
         <Button
@@ -86,7 +83,7 @@ const AddColumnCard: NextPage<AppProps> = ({ columnCount }) => {
           sx={{ textTransform: 'none' }}
           onClick={() => {
             toggleEditMode();
-            setTitle("");
+            setContent("");
           }}
         >
           Cancel
@@ -106,7 +103,7 @@ const AddColumnCard: NextPage<AppProps> = ({ columnCount }) => {
       sx={{
         textTransform: 'none',
         paddingX: 4,
-        width: "280px",
+        width: 350,
         height: "54px",
         color: "primary.main",
         display: "flex",
@@ -118,9 +115,9 @@ const AddColumnCard: NextPage<AppProps> = ({ columnCount }) => {
       }}
       onClick={toggleEditMode}
     >
-      Add Column
+      Add Card
     </Paper>
   );
 };
 
-export default AddColumnCard;
+export default AddCardButton;

@@ -29,7 +29,8 @@ export const typeDefs = `#graphql
     swapColumns(activeColumnId: ID!, overColumnId: ID!): MutationResponse
     deleteColumn(id: ID!): MutationResponse
     addTask(columnId: String, content: String): MutationResponse
-    updateTask(id: ID!, columnId: String, content: String): MutationResponse
+    updateTask(id: ID!, content: String): MutationResponse
+    moveTask(activeTaskId: ID!, overTaskId: ID!, columnId: String): MutationResponse
     deleteTasks(ids: [ID]!): MutationResponse
   }
 `;
