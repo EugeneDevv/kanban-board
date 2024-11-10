@@ -2,19 +2,19 @@
   "columns": [
     {
       "id": "col1",
-      "title": "To Do"
+      "title": "To-Do"
     },
     {
       "id": "col2",
       "title": "In Progress"
     },
     {
-      "id": "col3",
-      "title": "Review"
+      "id": "13e3f848-de3e-4ff2-adc8-0fefbbceb540",
+      "title": "New Column 2"
     },
     {
-      "id": "col4",
-      "title": "Done"
+      "id": "5e27578f-db84-409e-8205-0b75ffdda1f7",
+      "title": "New Col 3"
     }
   ],
   "tasks": [
@@ -47,36 +47,6 @@
       "id": "6",
       "columnId": "col2",
       "content": "Develop API endpoints"
-    },
-    {
-      "id": "7",
-      "columnId": "col3",
-      "content": "Code review for authentication"
-    },
-    {
-      "id": "8",
-      "columnId": "col3",
-      "content": "Test database schema"
-    },
-    {
-      "id": "9",
-      "columnId": "col3",
-      "content": "QA for API endpoints"
-    },
-    {
-      "id": "10",
-      "columnId": "col4",
-      "content": "Deploy initial build"
-    },
-    {
-      "id": "11",
-      "columnId": "col4",
-      "content": "Complete project documentation"
-    },
-    {
-      "id": "12",
-      "columnId": "col4",
-      "content": "Client feedback review"
     }
   ]
 }

@@ -2,6 +2,11 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
 import "./globals.css";
+import Providers from "@/components/Providers";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
+import theme from "@/styles/theme";
+import { ThemeProvider } from "@mui/material/styles";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -27,10 +32,16 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <AppRouterCacheProvider>
-          {children}
-        </AppRouterCacheProvider>
-
+        <Providers>
+          <AppRouterCacheProvider>
+            <ThemeProvider theme={theme}>
+              <main className='app'>
+                {children}
+              </main>
+            </ThemeProvider>
+            <ToastContainer />
+          </AppRouterCacheProvider>
+        </Providers>
       </body>
     </html>
   );

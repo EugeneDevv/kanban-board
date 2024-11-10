@@ -3,18 +3,18 @@ import { Id, Task } from "@/utils/types"
 import Box from "@mui/material/Box/Box"
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useState } from "react";
-import TextField from "@mui/material/TextField/TextField";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities"
+import { NextPage } from "next";
 
-interface Props {
+interface AppProps {
   task: Task,
   deleteTask: (id: Id) => void;
   updateTask: (id: Id, value: string) => void;
 }
 
 
-const TaskCard = ({ task, deleteTask, updateTask }: Props) => {
+const TaskCard: NextPage<AppProps> = ({ task, deleteTask, updateTask }) => {
 
   const [mouseIsOver, setMouseIsOver] = useState(false)
   const [editMode, setEditMode] = useState(false);
@@ -45,13 +45,12 @@ const TaskCard = ({ task, deleteTask, updateTask }: Props) => {
       style={style}
       sx={{
         padding: 2.5,
-        backgroundColor: "gray",
+        backgroundColor: "white",
         height: "100px",
         display: "flex",
         textAlign: "left",
         alignItems: "center",
         position: "relative",
-        borderRadius: '12px',
         borderColor: "gray",
         cursor: "grab",
         opacity: "30%",
@@ -72,13 +71,13 @@ const TaskCard = ({ task, deleteTask, updateTask }: Props) => {
       {...listeners}
       sx={{
         padding: 2.5,
-        backgroundColor: "gray",
-        height: "100px",
+        backgroundColor: "white",
+        maxHeight: "100px",
+        minHeight: "60px",
         display: "flex",
         textAlign: "left",
         alignItems: "center",
         position: "relative",
-        borderRadius: '12px',
         cursor: "grab",
         '&:hover': {
           ring: '2px',
@@ -107,18 +106,18 @@ const TaskCard = ({ task, deleteTask, updateTask }: Props) => {
       {...listeners}
       sx={{
         padding: 2.5,
-        backgroundColor: "gray",
-        height: "100px",
+        backgroundColor: "white",
+        maxHeight: "100px",
+        minHeight: "60px",
         display: "flex",
         textAlign: "left",
         alignItems: "center",
         position: "relative",
-        borderRadius: '12px',
         cursor: "grab",
         '&:hover': {
           ring: '2px',
-          boxShadow: `inset 0 0 0 2px rgb(244, 114, 182)`, // `ring-rose-500` equivalent color
-          ringColor: 'rgb(244, 114, 182)',
+          boxShadow: `inset 0 0 0 2px #ededed`, // `ring-rose-500` equivalent color
+          ringColor: '#ededed',
         },
       }}
       className="task"
