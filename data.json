@@ -1,37 +1,29 @@
 {
   "columns": [
     {
-      "id": "col2",
-      "title": "In Progress"
-    },
-    {
       "id": "col1",
       "title": "To-Do"
     },
     {
-      "id": "5a477a57-93fc-4d2c-85d0-576a9c1ed6d5",
-      "title": "new col"
-    },
-    {
-      "id": "3f99113e-987a-4de2-8a86-04a0deb126f3",
-      "title": "new col"
+      "id": "col2",
+      "title": "In Progress"
     }
   ],
   "tasks": [
     {
       "id": "3",
-      "columnId": "col2",
-      "content": "Create wireframes"
-    },
-    {
-      "id": "1",
       "columnId": "col1",
-      "content": "Set up project repository"
+      "content": "Create wireframes"
     },
     {
       "id": "4",
       "columnId": "col1",
       "content": "Implement authentication"
+    },
+    {
+      "id": "1",
+      "columnId": "col1",
+      "content": "Set up project repository"
     }
   ]
 }
