@@ -1,10 +1,10 @@
 "use client"
 import Box from '@mui/material/Box';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Column, Id, Task } from '@/utils/types';
 import ColumnContainer from './ColumnContainer';
 import { DndContext, DragEndEvent, DragOverEvent, DragOverlay, DragStartEvent, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
-import { SortableContext } from '@dnd-kit/sortable';
+import { arrayMove, SortableContext } from '@dnd-kit/sortable';
 import { createPortal } from 'react-dom';
 import TaskCard from './TaskCard';
 import { useMutation, useQuery } from '@apollo/client';
@@ -12,6 +12,13 @@ import { GET_COLUMNS_AND_TASKS } from '@/app/api/graphql/queries';
 import { MOVE_TASK, SWAP_COLUMNS } from '@/app/api/graphql/mutations';
 import AddColumnCard from './AddColumnCard';
 import { toast } from 'react-toastify';
+
+type KanbanContextType = {
+  columns: Column[];
+  tasks: Task[];
+  handleColumnSwap: (activeColumnId: string, overColumnId: string) => Promise<void>;
+  handleMoveTask: (activeTaskId: string, overTaskId: string, columnId: string) => Promise<void>;
+};
 
 const KanbanBoard = () => {
   // GraphQL mutations for swapping columns and moving tasks
@@ -21,6 +28,10 @@ const KanbanBoard = () => {
   const [moveTask] = useMutation(MOVE_TASK, {
     refetchQueries: [{ query: GET_COLUMNS_AND_TASKS }]
   });
+
+  // State to manage columns and tasks locally
+  const [columns, setColumns] = useState<Column[]>([]);
+  const [tasks, setTasks] = useState<Task[]>([]);
 
   // State to track the active column and task during drag events
   const [activeColumn, setActiveColumn] = useState<Column | null>(null);
@@ -36,11 +47,17 @@ const KanbanBoard = () => {
   // Query to fetch columns and tasks data
   const { data, loading, error } = useQuery(GET_COLUMNS_AND_TASKS);
 
+  // Set fetched data to local state once loaded
+  useEffect(() => {
+    if (data) {
+      setColumns(data.columns || []);
+      setTasks(data.tasks || []);
+    }
+  }, [data]);
+
   if (loading) return <p>Loading...</p>
   if (error) return <p>Oops! Something went wrong...</p>
 
-  const columns: Column[] = data?.columns ?? [];
-  const tasks: Task[] = data?.tasks ?? [];
 
   let columnIDs: Id[] = [];
   if (!loading && !error && data) {
@@ -90,8 +107,14 @@ const KanbanBoard = () => {
     const activeColumnId = active.id;
     const overColumnId = over.id;
     if (activeColumnId === overColumnId) return;
-    if (event.active.data.current?.type === "Column")
-      handleColumnSwap(activeColumnId.toString(), overColumnId.toString());
+    if (event.active.data.current?.type === "Column") {
+      setColumns((columns) => {
+        const activeColumnIndex = columns.findIndex((col) => col.id === activeColumnId);
+        const overColumnIndex = columns.findIndex((col) => col.id === overColumnId);
+
+        return arrayMove(columns, activeColumnIndex, overColumnIndex);
+      })
+      handleColumnSwap(activeColumnId.toString(), overColumnId.toString());}
   }
 
   // Sets active column or task on drag start
@@ -122,8 +145,6 @@ const KanbanBoard = () => {
 
     // Dropping a task over another task
     if (isActiveATask && isOverATask) {
-      console.log("activeId", activeId);
-      console.log("overId", overId);
       handleMoveTask(activeId.toString(), overId.toString(), "");
     }
 
